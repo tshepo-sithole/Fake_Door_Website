@@ -1,17 +1,15 @@
 import os
-
 from flask import Flask, render_template, request, flash, redirect, url_for
 from datetime import datetime
-import requests
 import smtplib
 
 app = Flask(__name__)
 # Make sure your app has a secret key configured for flashing messages:
 app.config['SECRET_KEY'] = 'tshepo'
 
-COMPANY_EMAIL = 'info@tsp-enterprises.com'
-MY_EMAIL = 'tshepo941028@gmail.com'
-EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
+app.config['COMPANY_EMAIL'] = os.environ.get("COMPANY_EMAIL")
+app.config['MY_EMAIL'] = os.environ.get("MY_EMAIL")
+app.config['EMAIL_PASSWORD'] = os.environ.get("EMAIL_PASSWORD")
 
 
 @app.route('/')
@@ -50,9 +48,9 @@ def send_email(name, email, message):
     email_message = f"Subject:New Message (Fake door)\n\nName: {name}\nEmail: {email}\nMessage:{message}"
     with smtplib.SMTP("smtp.gmail.com") as connection:
         connection.starttls()
-        connection.login(MY_EMAIL, EMAIL_PASSWORD)
-        connection.sendmail(MY_EMAIL, COMPANY_EMAIL, email_message)
+        connection.login(app.config['MY_EMAIL'], app.config['EMAIL_PASSWORD'])
+        connection.sendmail(app.config['MY_EMAIL'], app.config['MY_EMAIL'], email_message)
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)

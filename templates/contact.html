@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<body>
+  <div class="container text-left">
+    <div class="row align-items-start">
+      <div class="col-12 col-md-6 p-3 order-1">
+        <div class="container rounded p-5 bg-blue shadow">
+          <h1 class="mb-4">Get in touch</h1>
+          <form id="contactForm" name="sentMessage" action="{{ url_for('contact_page') }}" method="post">
+            <!-- Flash Messages Block -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+            <div class="mb-3">
+              <label class="form-label">First Name</label>
+              <input name="name" type="text" class="form-control" id="name">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Email address</label>
+              <input name="email" type="email" class="form-control" id="email" placeholder="example@gmail.com">
+            </div>
+            <div class="mb-3">
+              <label  class="form-label">Message</label>
+              <textarea name="message" class="form-control" id="message" rows="3"></textarea>
+            </div>
+            <div style="text-align: right; width: 100%;">
+              <button type="submit" class="btn" id="submitButton"
+                      style="background-color: #28a745; color: white; border: none;
+                      padding: 10px 24px; border-radius: 4px; font-size: 16px; cursor: pointer;">Submit
+              </button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+      <div class="col-12 col-md-6 p-3 order-2">
+        <div class="container rounded p-5 bg-blue shadow">
+          <h1 class="mb-4">Contact Info</h1>
+          <p class="text-white mb-4"><b>Email us: </b><br>info@tsp-enterprises.com</p>
+          <p class="text-white mb-4"><b>Address: </b><br>Boksburg, Gauteng <br>South Africa</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+{% endblock %}

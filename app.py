@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, render_template, request, flash, redirect, url_for
 from datetime import datetime
 import requests
@@ -9,7 +11,7 @@ app.config['SECRET_KEY'] = 'tshepo'
 
 COMPANY_EMAIL = 'info@tsp-enterprises.com'
 MY_EMAIL = 'tshepo941028@gmail.com'
-EMAIL_PASSWORD = 'goovarrzmlixaitb'
+EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
 
 
 @app.route('/')

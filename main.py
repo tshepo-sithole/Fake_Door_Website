@@ -31,7 +31,12 @@ def download_page():
         email = request.form.get('download_email')
 
         # Send email only when they fill out and submit the waitlist form
-        send_email(name, email, message='A user is interested in downloading the tool')
+        send_email(
+            name=name,
+            email=email,
+            subject="New Form Submission (Fake Door)",
+            message='A user is interested in downloading the tool')
+
         flash('Thank you! We will let you know very soon', 'success')
         return redirect(url_for('download_page', submitted=True))
 
@@ -41,6 +46,7 @@ def download_page():
         send_email(
             name='No name',
             email='No user email',
+            subject='Fake Door - Download Button Clicked',
             message='A user just clicked the download button from the home page',)
 
     return render_template('download.html')
@@ -53,16 +59,21 @@ def contact_page():
         email = request.form.get("email")
         message = request.form.get("message")
 
-        send_email(name, email, message)
+        send_email(
+            name=name,
+            email=email,
+            subject="New Form Submission (Fake Door)",
+            message=message)
+
         flash('Thank you! Your message has been sent successfully.', 'success')
         return redirect(url_for('contact_page'))
     return render_template('contact.html')
 
 
-def send_email(name, email, message):
+def send_email(subject, name, email, message):
     msg = EmailMessage()
 
-    msg["Subject"] = "New Form Submission (Fake Door)"
+    msg["Subject"] = subject
     msg["From"] = app.config['MY_EMAIL']
     msg["To"] = app.config['COMPANY_EMAIL']
 

@@ -34,7 +34,7 @@ def download_page():
         send_email(
             name=name,
             email=email,
-            subject="New Form Submission (Fake Door)",
+            subject='Fake Door - User Interested',
             message='A user is interested in downloading the tool')
 
         flash('Thank you! We will let you know very soon', 'success')

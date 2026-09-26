@@ -2,6 +2,7 @@ import os
 from flask import Flask, render_template, request, flash, redirect, url_for
 from datetime import datetime
 import smtplib
+from email.message import EmailMessage
 
 app = Flask(__name__)
 # Make sure your app has a secret key configured for flashing messages:
@@ -12,22 +13,36 @@ app.config['MY_EMAIL'] = os.environ.get("MY_EMAIL")
 app.config['EMAIL_PASSWORD'] = os.environ.get("EMAIL_PASSWORD")
 
 
+# COMPANY_EMAIL = 'info@tsp-enterprises.com'
+# MY_EMAIL = 'tshepo941028@yahoo.com'
+# EMAIL_PASSWORD = 'omuhqqtvlrhutpzv'
+
+
 @app.route('/')
 def home_page():
     current_year = datetime.now().year
     return render_template('index.html', year=current_year)
 
 
-@app.route('/download', methods=["GET", "POST"])
+@app.route('/download', methods=['GET', 'POST'])
 def download_page():
-    send_email(name='No name', email='No user email', message=" A user just clicked download button")
     if request.method == 'POST':
-        name = request.form.get("download_name")
-        email = request.form.get("download_email")
+        name = request.form.get('download_name')
+        email = request.form.get('download_email')
 
-        send_email(name, email, message=" A user is interested in downloading the tool")
+        # Send email only when they fill out and submit the waitlist form
+        send_email(name, email, message='A user is interested in downloading the tool')
         flash('Thank you! We will let you know very soon', 'success')
-        return redirect(url_for('download_page'))
+        return redirect(url_for('download_page', submitted=True))
+
+    # Check if they just submitted the form (via the ?submitted=true query parameter)
+    # If NOT submitted, it means they just landed here from the home page button!
+    if request.args.get('submitted') != 'True':
+        send_email(
+            name='No name',
+            email='No user email',
+            message='A user just clicked the download button from the home page',)
+
     return render_template('download.html')
 
 
@@ -45,12 +60,19 @@ def contact_page():
 
 
 def send_email(name, email, message):
-    email_message = f"Subject:New Message (Fake door)\n\nName: {name}\nEmail: {email}\nMessage:{message}"
-    with smtplib.SMTP("smtp.gmail.com") as connection:
-        connection.starttls()
+    msg = EmailMessage()
+
+    msg["Subject"] = "New Form Submission (Fake Door)"
+    msg["From"] = app.config['MY_EMAIL']
+    msg["To"] = app.config['COMPANY_EMAIL']
+
+    msg.set_content(f"Name: {name}\nEmail: {email}\nMessage: {message}")
+
+    # Connect to Yahoo SMTP via SSL on port 465
+    with smtplib.SMTP_SSL("smtp.mail.yahoo.com", 465) as connection:
         connection.login(app.config['MY_EMAIL'], app.config['EMAIL_PASSWORD'])
-        connection.sendmail(app.config['MY_EMAIL'], app.config['MY_EMAIL'], email_message)
+        connection.send_message(msg)  # send_message handles formatting automatically
 
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True)

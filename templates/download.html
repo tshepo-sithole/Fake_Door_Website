@@ -22,6 +22,11 @@
         <div class="row justify-content-center">
             <div class="col-12 col-md-8 col-lg-6 text-start">
                 <form id="downloadForm" name="sentMessage" action="{{ url_for('download_page') }}" method="post" >
+                    <!-- HONEYPOT FIELD (Invisible to real users, trap for bots) -->
+                    <div style="opacity: 0; position: absolute; top: 0; left: 0; height: 0; width: 0; z-index: -1;" aria-hidden="true">
+                        <label for="hp_website">Leave this field blank</label>
+                        <input type="text" id="hp_website" name="hp_website" value="" tabindex="-1" autocomplete="off">
+                    </div>
                     <!-- Flash Messages Block -->
                     {% with messages = get_flashed_messages(with_categories=true) %}
                       {% if messages %}
